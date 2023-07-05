@@ -4,22 +4,25 @@ import os
 
 cfg = CN()
 
+
 # global
 cfg.exp_name = 'test001'
 cfg.epochs = 200
 cfg.lr = 2e4
 cfg.batch_size = 32
-cfg.eval_iter = 1
-cfg.save_iter = 1
+cfg.log_iter = 2
+cfg.eval_iter = 10
+cfg.save_iter = 100
 
 # path and directory
-cfg.dataset_dir = './archive/train_data'
+cfg.dataset_dir = './edges2shoes/train2'
 cfg.save_dir = './result'
 cfg.pretrained = False
 cfg.model_dir = None
 
 # params
 cfg.lambd = 100
+cfg.clip_weight = 0.5
 
 
 if cfg.pretrained:

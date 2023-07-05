@@ -9,9 +9,9 @@ def main():
     trainer = Trainer(cfg, device, begin_iter=0)
     
     for epoch in range(cfg.epochs):
-        trainer.train()
+        trainer.train(epoch)
         if epoch % cfg.eval_iter == 0:
-            trainer.eval()
+            trainer.evaluate()
 
         if epoch % cfg.save_iter == 0:
             trainer.save_model(cfg.save_dir)
