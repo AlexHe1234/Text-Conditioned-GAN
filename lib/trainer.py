@@ -35,8 +35,8 @@ class Trainer(object):
 
             # todo
             # context_string = ["hello paint a shoe" for _ in range(input_img.shape[0])]
-            context = pack['condition']
-
+            context = pack['condition'].to(self.device)
+            context = torch.zeros(context.shape, requires_grad=False).to(self.device)
             generated_image, conditions = self.gen(input_img, context)
 
             disc_input_fake = torch.cat((input_img, generated_image), 1)
