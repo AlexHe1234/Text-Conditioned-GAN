@@ -3,16 +3,16 @@ import clip
 import torch
 
 
-class ClipModel(nn.Module):
-    def __init__(self, device):
-        super().__init__()
-        self.device = device
-        self.model, self.preprocess = clip.load('ViT-B/32', device)
+# class ClipModel(nn.Module):
+#     def __init__(self, device):
+#         super().__init__()
+#         self.device = device
+#         self.model, self.preprocess = clip.load('ViT-B/32', device)
 
-    @torch.no_grad()
-    def forward(self, x, c):
-        x = self.preprocess(x).unsqueeze(0).to(self.device)
-        return self.model(x, c)
+#     @torch.no_grad()
+#     def forward(self, x, c):
+#         x = self.preprocess(x).unsqueeze(0).to(self.device)
+#         return self.model(x, c)
 
 
 class GeneratorLoss(nn.Module):
@@ -22,7 +22,7 @@ class GeneratorLoss(nn.Module):
         self.l1_loss = nn.L1Loss()
         self.lambd = lambd
         self.clip_weight = clip_weight
-        self.clip_model = ClipModel(device)
+        # self.clip_model = ClipModel(device)
     
     def forward(self, generated_img, target_img, discriminator_output, real_target, c):
         gen_loss = self.adversarial_loss(discriminator_output, real_target)

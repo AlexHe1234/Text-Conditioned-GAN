@@ -25,8 +25,8 @@ class Trainer(object):
     def train(self, epoch):
         self.gen.train()
         self.disc.train()
-        for _, img in enumerate(self.dataloader):
-            input_image, target_image = img[0][0], img[0][1]
+        for _, pack in enumerate(self.dataloader):
+            input_image, target_image = pack['input'], pack['og']
             input_img = input_image.to(self.device)
             target_img = target_image.to(self.device)
             
@@ -34,8 +34,10 @@ class Trainer(object):
             fake_target = torch.zeros(input_img.shape[0], 1, 30, 30, requires_grad=True).to(self.device)
 
             # todo
-            context_string = ["hello paint a shoe" for _ in range(input_img.shape[0])]
-            generated_image, conditions = self.gen(input_img, context_string)
+            # context_string = ["hello paint a shoe" for _ in range(input_img.shape[0])]
+            context = pack['condition']
+
+            generated_image, conditions = self.gen(input_img, context)
 
             disc_input_fake = torch.cat((input_img, generated_image), 1)
             D_fake = self.disc(disc_input_fake)

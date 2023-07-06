@@ -4,17 +4,27 @@ from torch import nn
 import numpy as np
 
 
-class ClipTextNet(nn.Module):
-    def __init__(self, device):
-        super(ClipTextNet, self).__init__()
-        self.model, self.preprocess = clip.load('ViT-B/32', device)
-        self.linear = nn.Linear(512, 512)
-        self.bn = nn.BatchNorm1d(512)
+# class ClipTextNet(nn.Module):
+#     def __init__(self, device):
+#         super(ClipTextNet, self).__init__()
+#         self.model, self.preprocess = clip.load('ViT-B/32', device)
+#         self.linear = nn.Linear(512, 512)
+#         self.bn = nn.BatchNorm1d(512)
+
+#     def forward(self, x):
+#         with torch.no_grad():
+#             features = self.model.encode_te
+
+
+class EmbedLayer(nn.Module):
+    def __init__(self, in_channel, mid_channel=512):
+        super().__init__()
+        self.layer1 = nn.Linear(in_channel, mid_channel)
+        self.layer2 = nn.Linear(mid_channel, mid_channel)
 
     def forward(self, x):
-        with torch.no_grad():
-            features = self.model.encode_text(x)
-        return self.linear(features)
+        x = self.layer1(x)
+        return self.layer2(x)
 
 
 class UnetSkipConnectionBlock(nn.Module):
@@ -110,20 +120,21 @@ class UnetGenerator(nn.Module):
 
 
 class Generator(nn.Module):
-    def __init__(self, device, input_nc, output_nc, nf=64):
+    def __init__(self, device, input_nc, output_nc, classes=6, nf=64):
         super().__init__()
         self.device = device
-        self.condition_model = ClipTextNet(device)
+        self.condition_model = EmbedLayer(classes, 512)
         self.unet = UnetGenerator(input_nc, output_nc, nf)
         
-    def forward(self, x, strings: str):
+    def forward(self, x, c: torch.Tensor):
         # with torch.no_grad():
         #     conditions = [clip.tokenize(string).to(self.device) for string in strings]
         # conditions = [self.condition_model(condition)[0][None, ...] for condition in conditions]
         # conditions = torch.cat(conditions, dim=0)[..., None, None]
-        conditions = torch.zeros((x.shape[0], 512, 1, 1))
-        out = self.unet(x, conditions)
-        return out, conditions
+        c = c[..., None, None]
+        out = self.unet(x, c)
+        exit()
+        return out, c
 
 
 if __name__ == '__main__':

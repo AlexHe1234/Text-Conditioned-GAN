@@ -1,8 +1,7 @@
+from torchvision.datasets import ImageFolder
+import torch
 import numpy as np
 import cv2
-import torch
-from torch.utils.data import DataLoader
-from torchvision.datasets import ImageFolder
 
 
 def read_image(img):
@@ -54,7 +53,5 @@ class Train(object):
         return image_a, image_b
 
 
-def make_dataloader(cfg):
-    # read in the sets and preprocess them
-    train_dataset = ImageFolder(cfg.dataset_dir, transform=Train(cfg))
-    return  DataLoader(train_dataset, cfg.batch_size, shuffle=True)
+def make_dataset(cfg):
+    return ImageFolder(cfg.dataset_dir, transform=Train(cfg))

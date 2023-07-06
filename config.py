@@ -15,10 +15,13 @@ cfg.eval_iter = 10
 cfg.save_iter = 100
 
 # path and directory
-cfg.dataset_dir = './edges2shoes/train2'
+cfg.dataset_dir = './datasets/intel_classification'
 cfg.save_dir = './result'
 cfg.pretrained = False
 cfg.model_dir = None
+
+# modules
+cfg.dataset_module = 'intel'
 
 # params
 cfg.lambd = 100
